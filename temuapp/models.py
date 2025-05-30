@@ -12,6 +12,10 @@ class User(models.Model):
     role = models.CharField(max_length=10, choices=[('admin', 'Admin'), ('regular', 'Regular User')], default='regular')
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def id(self):
+        return self.user_id
+
     class Meta:
         db_table = 'users'
 
