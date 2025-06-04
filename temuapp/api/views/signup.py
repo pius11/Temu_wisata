@@ -3,7 +3,7 @@ from rest_framework.permissions import AllowAny
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
-from ..serializer import UserSerializer
+from ..serializers.userSeriali import UserSerializer
 
 @csrf_exempt
 @api_view(['POST'])

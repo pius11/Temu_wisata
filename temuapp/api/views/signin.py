@@ -5,7 +5,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from temuapp.models import User
-from ..serializer import UserSerializer
+from ..serializers.userSeriali import UserSerializer
 
 @csrf_exempt
 @api_view(['POST'])
