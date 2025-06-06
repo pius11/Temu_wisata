@@ -1,16 +1,40 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
-class User(models.Model):
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Users must have an email address')
+        email = self.normalize_email(email)
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(username, email, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
-    password_hash = models.CharField(max_length=255)
-    no_hp = models.CharField(max_length=14, unique=True, null= True, blank=True)
+    password = models.CharField(max_length=255)
+    no_hp = models.CharField(max_length=14, unique=True, null=True, blank=True)
     alamat = models.TextField(null=True, blank=True)
     foto_profile = models.TextField(null=True, blank=True)
     role = models.CharField(max_length=10, choices=[('admin', 'Admin'), ('regular', 'Regular User')], default='regular')
     created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
+
+    objects = UserManager()
 
     @property
     def id(self):
@@ -32,7 +56,8 @@ class TouristSpot(models.Model):
     google_maps_url = models.URLField(max_length=255, null=True, blank=True)
     category = models.CharField(max_length=100)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_spots')
-    price = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    price_min = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    price_max = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     is_verified = models.BooleanField(default=False)
     is_reported = models.BooleanField(default=False)  # <--- Tambah
     is_removed = models.BooleanField(default=False)   # <--- Tambah

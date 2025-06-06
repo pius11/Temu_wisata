@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
                 ("user_id", models.AutoField(primary_key=True, serialize=False)),
                 ("username", models.CharField(max_length=50, unique=True)),
                 ("email", models.EmailField(max_length=100, unique=True)),
-                ("password_hash", models.CharField(max_length=255)),
+                ("password", models.CharField(max_length=255)),
                 ("no_hp", models.CharField(max_length=14, unique=True)),
                 ("alamat", models.TextField()),
                 ("foto_profile", models.TextField()),

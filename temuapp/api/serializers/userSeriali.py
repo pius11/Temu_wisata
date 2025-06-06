@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
             'user_id',
             'username',
             'email',
-            'password_hash',
+            'password',
             'no_hp',
             'foto_profile',
             'alamat',
@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Hash password sebelum save
-        if 'password_hash' in validated_data:
-            validated_data['password_hash'] = make_password(validated_data['password_hash'])
+        if 'password' in validated_data:
+            validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
 
