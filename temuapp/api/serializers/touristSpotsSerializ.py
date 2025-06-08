@@ -12,9 +12,14 @@ class SpotImageSerializer(serializers.ModelSerializer):
         fields = ['image_id', 'file_name', 'is_primary', 'uploaded_at']
 
 class TouristSpotSerializer(serializers.ModelSerializer):
-    user_id = UserSerializer(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     images = SpotImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = TouristSpot
         fields = '__all__'
+
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        rep['user_id'] = UserSerializer(instance.user_id).data
+        return rep

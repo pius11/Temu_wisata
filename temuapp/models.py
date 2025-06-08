@@ -69,7 +69,7 @@ class TouristSpot(models.Model):
 class SpotImage(models.Model):
     image_id = models.AutoField(primary_key=True)
     spot_id = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='images')
-    file_name = models.CharField(max_length=255)
+    file_name = models.ImageField(upload_to='spot_images/')  # Ubah dari CharField ke ImageField
     is_primary = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
@@ -98,7 +98,7 @@ class Review(models.Model):
 class ReviewImage(models.Model):
     image_id = models.AutoField(primary_key=True)
     review_id = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='images')
-    file_name = models.CharField(max_length=255)
+    file_name = models.ImageField(upload_to='review_images/')  # Ubah dari CharField ke ImageField
     uploaded_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
