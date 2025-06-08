@@ -24,3 +24,10 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data['password'] = make_password(validated_data['password'])
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        password = validated_data.get('password', None)
+        if password:
+            instance.password = make_password(password)
+            validated_data.pop('password')
+        return super().update(instance, validated_data)
+

@@ -6,6 +6,9 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from .views.postTouristSpots import create_tourist_spot
 from .views.getAllSpots import list_tourist_spots
 from .views.updateUser import update_user
+from .views.postReview import create_review
+from .views.getAllReviews import list_reviews
+from .views.getReviewsBySpot import get_reviews_by_spot
 
 
 
@@ -17,4 +20,7 @@ urlpatterns = [
     path('touristspots/', create_tourist_spot, name='create-tourist-spot'),
     path('touristspots/all/', list_tourist_spots, name='list-tourist-spots'),
     path('users/<int:user_id>/update/', update_user, name='update-user'),
+    path('reviews/', create_review, name='create-review'),
+    path('reviews/all/', list_reviews, name='list-reviews'),
+    path('reviews/spot/<int:spot_id>/', get_reviews_by_spot, name='get-reviews-by-spot'),
 ]
