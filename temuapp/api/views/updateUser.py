@@ -1,20 +1,17 @@
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from temuapp.models import User
 from ..serializers.userSeriali import UserSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
-def update_user(request, user_id):
-    try:
-        user = User.objects.get(pk=user_id)
-    except User.DoesNotExist:
-        return Response({"code": 404, "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
-
+@parser_classes([MultiPartParser, FormParser])
+def update_current_user(request):
+    user = request.user
     serializer = UserSerializer(user, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
-        return Response({"code": 200, "message": "User updated", "data": serializer.data}, status=status.HTTP_200_OK)
-    return Response({"code": 400, "message": "Invalid data", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"code": 2000, "message": "User updated", "data": serializer.data}, status=status.HTTP_200_OK)
+    return Response({"code": 4001, "message": "Update failed", "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)

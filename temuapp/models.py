@@ -25,7 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=255)
     no_hp = models.CharField(max_length=14, unique=True, null=True, blank=True)
     alamat = models.TextField(null=True, blank=True)
-    foto_profile = models.TextField(null=True, blank=True)
+    foto_profile = models.ImageField(upload_to='profile_images/', null=True, blank=True)  # Ubah ke ImageField
     role = models.CharField(max_length=10, choices=[('admin', 'Admin'), ('regular', 'Regular User')], default='regular')
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
@@ -129,3 +129,14 @@ class ReportTouristSpot(models.Model):
 
     class Meta:
         db_table = 'report_tourist_spots'
+
+
+class FavoriteSpot(models.Model):
+    favorite_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorite_spots')
+    spot = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='favorited_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'favorite_spots'
+        unique_together = ('user', 'spot')  # Satu user tidak bisa menyimpan spot yang sama dua kali

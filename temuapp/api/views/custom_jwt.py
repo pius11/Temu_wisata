@@ -25,7 +25,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             'username': user.username,
             'email': user.email,
             'alamat': user.alamat,
-            'foto_profile': user.foto_profile,
+            'foto_profile': user.foto_profile.url if user.foto_profile and hasattr(user.foto_profile, 'url') else '/media/profile_images/default_profile.jpg',
             'role': user.role,
             'no_hp': user.no_hp,
         }
