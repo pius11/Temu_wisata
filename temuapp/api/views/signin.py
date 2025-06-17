@@ -5,7 +5,7 @@ from rest_framework import status
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import check_password
 from temuapp.models import User
-from ..serializer import UserSerializer
+from ..serializers.userSeriali import UserSerializer
 
 @csrf_exempt
 @api_view(['POST'])
@@ -17,7 +17,7 @@ def login_user(request):
         return Response({"code": 4002, "message": "Username and password required"}, status=status.HTTP_400_BAD_REQUEST)
     try:
         user = User.objects.get(username=username)
-        if check_password(password, user.password_hash):
+        if check_password(password, user.password):
             serializer = UserSerializer(user)
             return Response({"code": 2002, "message": "Login successful", "data": serializer.data}, status=status.HTTP_200_OK)
         else:

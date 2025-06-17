@@ -15,7 +15,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             raise serializers.ValidationError({'detail': 'No active account found with the given credentials'})
-        if not check_password(password, user.password_hash):
+        if not check_password(password, user.password):
             raise serializers.ValidationError({'detail': 'No active account found with the given credentials'})
         refresh = RefreshToken.for_user(user)
         data = {
@@ -24,12 +24,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             'user_id': user.user_id,
             'username': user.username,
             'email': user.email,
-            'password_hash': user.password_hash,
             'alamat': user.alamat,
-            'foto_profile': user.foto_profile,
+            'foto_profile': user.foto_profile.url if user.foto_profile and hasattr(user.foto_profile, 'url') else '/media/profile_images/default_profile.jpg',
             'role': user.role,
             'no_hp': user.no_hp,
-            
         }
         return data
 
