@@ -19,11 +19,11 @@ def create_tourist_spot(request):
         spot = spot_serializer.save()
         images = request.FILES.getlist('images')
         image_objs = []
-        for img in images:
+        for idx, img in enumerate(images):
             image_obj = SpotImage.objects.create(
                 spot_id=spot,
                 file_name=img,  # file_name sekarang adalah ImageField
-                is_primary=False
+                is_primary=(idx == 0)  # gambar pertama jadi primary
             )
             image_objs.append(image_obj)
         images_data = SpotImageSerializer(image_objs, many=True).data
