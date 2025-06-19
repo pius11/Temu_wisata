@@ -104,32 +104,21 @@ class ReviewImage(models.Model):
     class Meta:
         db_table = 'review_images'
 
-class Report(models.Model):
-    report_id = models.AutoField(primary_key=True)
-    review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
-    reporter_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports_made')
-    reason = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('resolved', 'Resolved')], default='pending')
-    admin_action = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    resolved_at = models.DateTimeField(null=True, blank=True)
+# class ChatSession(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions')
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'reports'
+#     def __str__(self):
+#         return f"Session {self.id} - {self.user.username}"
 
-class ReportTouristSpot(models.Model):
-    report_id = models.AutoField(primary_key=True)
-    spot_id = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='reports')
-    reporter_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spot_reports_made')
-    reason = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('resolved', 'Resolved')], default='pending')
-    admin_action = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    resolved_at = models.DateTimeField(null=True, blank=True)
+# class ChatMessage(models.Model):
+#     session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
+#     sender = models.CharField(max_length=10, choices=[('user', 'User'), ('ai', 'AI')])
+#     message = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'report_tourist_spots'
-
+#     def __str__(self):
+#         return f"{self.sender} at {self.created_at}"
 
 class FavoriteSpot(models.Model):
     favorite_id = models.AutoField(primary_key=True)
