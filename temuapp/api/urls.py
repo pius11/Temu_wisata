@@ -13,6 +13,7 @@ from .views.getCurrentUser import get_current_user
 from .views.ai import chat_ai
 from .views.updateSpot import update_tourist_spot
 from .views.deleteSpot import delete_tourist_spot
+from .views.favoriteSpot import add_favorite_spot, remove_favorite_spot, list_favorite_spots
 # from .views.ai import get_chat_history
 from django.conf import settings
 from django.conf.urls.static import static
@@ -36,5 +37,8 @@ urlpatterns = [
     path('chat/', chat_ai, name='chat-ai'),
     path('touristspots/<int:pk>/update/', update_tourist_spot, name='update-tourist-spot'),
     path('touristspots/<int:pk>/delete/', delete_tourist_spot, name='delete-tourist-spot'),
+    path('favorites/', list_favorite_spots, name='list-favorite-spots'),
+    path('favorites/add/<int:spot_id>/', add_favorite_spot, name='add-favorite-spot'),
+    path('favorites/remove/<int:spot_id>/', remove_favorite_spot, name='remove-favorite-spot'),
     # path('chat/history/<int:session_id>/', get_chat_history, name='get-chat-history'),
 ]

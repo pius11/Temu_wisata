@@ -128,4 +128,4 @@ class FavoriteSpot(models.Model):
 
     class Meta:
         db_table = 'favorite_spots'
-        unique_together = ('user', 'spot')  # Satu user tidak bisa menyimpan spot yang sama dua kali
+        unique_together = ('user', 'spot')  # Satu user tidak bisa menyimpan spot yang sama dua kalix
