@@ -13,6 +13,7 @@ from .views.getCurrentUser import get_current_user
 from .views.ai import chat_ai
 from django.conf import settings
 from django.conf.urls.static import static
+from .views.me import MeView
 
 
 
@@ -29,4 +30,5 @@ urlpatterns = [
     path('reviews/spot/<int:spot_id>/', get_reviews_by_spot, name='get-reviews-by-spot'),
     path('users/me/', get_current_user, name='get-current-user'),
     path('chat/', chat_ai, name='chat-ai'),
+    path('me/', MeView.as_view())
 ]
