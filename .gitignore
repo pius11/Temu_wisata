@@ -22,3 +22,9 @@ Thumbs.db
 # Ignore all migration files except __init__.py
 **/migrations/*
 !**/migrations/__init__.py
+
+
+media/profile_images/
+media/spot_images/
+media/testimoni_images/
+
