@@ -4,7 +4,7 @@ from .views.getallUsers import list_users, count_users
 from .views.custom_jwt import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.postTouristSpots import create_tourist_spot
-from .views.getAllSpots import list_tourist_spots, count_verified_spots
+from .views.getAllSpots import list_tourist_spots, count_verified_spots, get_tourist_spot_by_id
 from .views.updateUser import update_current_user
 # from .views.postReview import create_review
 # from .views.getAllReviews import list_reviews
@@ -44,4 +44,5 @@ urlpatterns = [
     # path('chat/history/<int:session_id>/', get_chat_history, name='get-chat-history'),
     path('testimoni/<int:spot_id>/add/', create_testimoni, name='create-testimoni'),
     path('testimoni/spot/<int:spot_id>/', list_testimoni_by_spot, name='list-testimoni-by-spot'),
+    path('touristspots/<int:spot_id>/', get_tourist_spot_by_id, name='get-tourist-spot-by-id'),
 ]
