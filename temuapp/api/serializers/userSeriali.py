@@ -7,7 +7,7 @@ from django.core.files import File
 
 
 class UserSerializer(serializers.ModelSerializer):
-    foto_profile = serializers.SerializerMethodField()
+    foto_profile = serializers.ImageField(required=False, allow_null=True)
 
     class Meta:
         model = User
@@ -22,16 +22,19 @@ class UserSerializer(serializers.ModelSerializer):
             'role',
             'created_at'
         ]
+        extra_kwargs = {'password': {'write_only': True}}
 
-    def get_foto_profile(self, obj):
-        if obj.foto_profile and hasattr(obj.foto_profile, 'url'):
-            return obj.foto_profile.url
-        return '/media/profile_images/default_profile.jpg'
+    def to_representation(self, instance):
+        rep = super().to_representation(instance)
+        if instance.foto_profile and hasattr(instance.foto_profile, 'url'):
+            rep['foto_profile'] = instance.foto_profile.url
+        else:
+            rep['foto_profile'] = '/media/profile_images/default_profile.jpg'
+        return rep
 
     def create(self, validated_data):
         if 'password' in validated_data:
             validated_data['password'] = make_password(validated_data['password'])
-        # Set path default jika tidak upload foto
         if not validated_data.get('foto_profile'):
             validated_data['foto_profile'] = 'profile_images/default_profile.jpg'
         return super().create(validated_data)

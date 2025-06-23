@@ -76,60 +76,49 @@ class SpotImage(models.Model):
     class Meta:
         db_table = 'spot_images'
 
-class Review(models.Model):
-    review_id = models.AutoField(primary_key=True)
-    spot_id = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='reviews')
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    rating = models.PositiveSmallIntegerField()
-    review_text = models.TextField(null=True, blank=True)
-    is_reported = models.BooleanField(default=False)
-    is_removed = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+# class Review(models.Model):
+#     review_id = models.AutoField(primary_key=True)
+#     spot_id = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='reviews')
+#     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+#     rating = models.PositiveSmallIntegerField()
+#     review_text = models.TextField(null=True, blank=True)
+#     is_reported = models.BooleanField(default=False)
+#     is_removed = models.BooleanField(default=False)
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'reviews'
-        constraints = [
-            models.CheckConstraint(
-                check=models.Q(rating__gte=1) & models.Q(rating__lte=5),
-                name='rating_range'
-            ),
-        ]
+#     class Meta:
+#         db_table = 'reviews'
+#         constraints = [
+#             models.CheckConstraint(
+#                 check=models.Q(rating__gte=1) & models.Q(rating__lte=5),
+#                 name='rating_range'
+#             ),
+#         ]
 
-class ReviewImage(models.Model):
-    image_id = models.AutoField(primary_key=True)
-    review_id = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='images')
-    file_name = models.ImageField(upload_to='review_images/')  # Ubah dari CharField ke ImageField
-    uploaded_at = models.DateTimeField(auto_now_add=True)
+# class ReviewImage(models.Model):
+#     image_id = models.AutoField(primary_key=True)
+#     review_id = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='images')
+#     file_name = models.ImageField(upload_to='review_images/')  # Ubah dari CharField ke ImageField
+#     uploaded_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'review_images'
+#     class Meta:
+#         db_table = 'review_images'
 
-class Report(models.Model):
-    report_id = models.AutoField(primary_key=True)
-    review_id = models.ForeignKey(Review, on_delete=models.CASCADE)
-    reporter_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports_made')
-    reason = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('resolved', 'Resolved')], default='pending')
-    admin_action = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    resolved_at = models.DateTimeField(null=True, blank=True)
+# class ChatSession(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chat_sessions')
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'reports'
+#     def __str__(self):
+#         return f"Session {self.id} - {self.user.username}"
 
-class ReportTouristSpot(models.Model):
-    report_id = models.AutoField(primary_key=True)
-    spot_id = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='reports')
-    reporter_id = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spot_reports_made')
-    reason = models.CharField(max_length=255)
-    status = models.CharField(max_length=10, choices=[('pending', 'Pending'), ('resolved', 'Resolved')], default='pending')
-    admin_action = models.TextField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    resolved_at = models.DateTimeField(null=True, blank=True)
+# class ChatMessage(models.Model):
+#     session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name='messages')
+#     sender = models.CharField(max_length=10, choices=[('user', 'User'), ('ai', 'AI')])
+#     message = models.TextField()
+#     created_at = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
-        db_table = 'report_tourist_spots'
-
+#     def __str__(self):
+#         return f"{self.sender} at {self.created_at}"
 
 class FavoriteSpot(models.Model):
     favorite_id = models.AutoField(primary_key=True)
@@ -139,4 +128,23 @@ class FavoriteSpot(models.Model):
 
     class Meta:
         db_table = 'favorite_spots'
-        unique_together = ('user', 'spot')  # Satu user tidak bisa menyimpan spot yang sama dua kali
+        unique_together = ('user', 'spot')  # Satu user tidak bisa menyimpan spot yang sama dua kalix
+
+class Testimoni(models.Model):
+    testimoni_id = models.AutoField(primary_key=True)
+    spot = models.ForeignKey(TouristSpot, on_delete=models.CASCADE, related_name='testimonies')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    testi_text = models.TextField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'testimonies'
+
+class TestimoniImage(models.Model):
+    image_id = models.AutoField(primary_key=True)
+    testimoni = models.ForeignKey(Testimoni, on_delete=models.CASCADE, related_name='images')
+    file_name = models.ImageField(upload_to='testimoni_images/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'testimoni_images'
