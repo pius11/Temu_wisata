@@ -4,7 +4,7 @@ from .views.getallUsers import list_users, count_users
 from .views.custom_jwt import MyTokenObtainPairView
 from rest_framework_simplejwt.views import TokenRefreshView
 from .views.postTouristSpots import create_tourist_spot
-from .views.getAllSpots import list_tourist_spots, count_verified_spots
+from .views.getAllSpots import list_tourist_spots, count_verified_spots, get_tourist_spot_by_id
 from .views.updateUser import update_current_user
 # from .views.postReview import create_review
 # from .views.getAllReviews import list_reviews
@@ -17,6 +17,7 @@ from .views.favoriteSpot import add_favorite_spot, remove_favorite_spot, list_fa
 # from .views.ai import get_chat_history
 from django.conf import settings
 from django.conf.urls.static import static
+from .views.testimoni import create_testimoni, list_testimoni_by_spot
 
 
 
@@ -41,4 +42,7 @@ urlpatterns = [
     path('favorites/add/<int:spot_id>/', add_favorite_spot, name='add-favorite-spot'),
     path('favorites/remove/<int:spot_id>/', remove_favorite_spot, name='remove-favorite-spot'),
     # path('chat/history/<int:session_id>/', get_chat_history, name='get-chat-history'),
+    path('testimoni/<int:spot_id>/add/', create_testimoni, name='create-testimoni'),
+    path('testimoni/spot/<int:spot_id>/', list_testimoni_by_spot, name='list-testimoni-by-spot'),
+    path('touristspots/<int:spot_id>/', get_tourist_spot_by_id, name='get-tourist-spot-by-id'),
 ]

@@ -14,9 +14,14 @@ import random
 def chat_ai(request):
     user_prompt = request.data.get('prompt', '').lower()
 
+    # Jika user bertanya nama AI
+    if any(k in user_prompt for k in ['nama kamu', 'siapa nama kamu', 'nama mu', 'namamu', 'siapa kamu']):
+        return Response({"response": "Hai, aku Tesa, asisten wisata virtual kamu. Ada yang bisa Tesa bantu?"})
+
     wisata_keywords = ['wisata', 'tempat', 'tiket', 'alamat', 'fasilitas', 'spot', 'pariwisata', 'harga', 'rekomendasi']
+    # Hanya ambil spot yang sudah diverifikasi
+    spots = TouristSpot.objects.filter(is_verified=True)
     if any(k in user_prompt for k in wisata_keywords):
-        spots = TouristSpot.objects.all()
         found_spots = []
 
         # Cek jika ada permintaan rentang harga
@@ -37,7 +42,6 @@ def chat_ai(request):
                 fuzz.partial_ratio(user_prompt, str(spot.fasilitas).lower()),
                 fuzz.partial_ratio(user_prompt, str(spot.description).lower()),
             ])
-            # Ambil spot jika kemiripan di atas threshold (misal 60)
             if max_score > 60 or (
                 "harga" in user_prompt and (
                     "termurah" in user_prompt and float(spot.price_min) == min([float(s.price_min) for s in spots])
@@ -50,7 +54,6 @@ def chat_ai(request):
                     f"Harga tiket masuk: {spot.price_min} - {spot.price_max}. "
                     f"Fasilitas yang tersedia: {spot.fasilitas}."
                 )
-        # Jika tidak ada spot yang cocok, cek apakah user minta rekomendasi
         if not found_spots and "rekomendasi" in user_prompt:
             all_spots = list(spots)
             if all_spots:
@@ -66,15 +69,15 @@ def chat_ai(request):
             return Response({"response": "\n\n".join(found_spots)})
         return Response({"response": "Maaf, saya tidak menemukan destinasi yang dimaksud di database kami."})
 
-    # Ambil data pariwisata dari database untuk context
-    spots = TouristSpot.objects.all() # batasi agar prompt tidak terlalu panjang
+    # Ambil data pariwisata dari database untuk context (hanya yang verified)
     spots_info = ""
     for spot in spots:
         spots_info += f"Nama: {spot.name}, Deskripsi: {spot.description}, Alamat: {spot.address}, Harga: {spot.price_min}-{spot.price_max}, Fasilitas: {spot.fasilitas}\n"
 
     # Prompt untuk Gemini dengan context database
     prompt = (
-        "Berikut adalah data tempat wisata di database kami:\n"
+        "Perkenalkan, namaku Tesa, asisten wisata virtual kamu.\n"
+        "Berikut adalah data tempat wisata di database kami (hanya yang sudah diverifikasi):\n"
         f"{spots_info}\n"
         "Jawablah pertanyaan user hanya berdasarkan data di atas. "
         "Buatlah jawaban yang natural, ramah, dan mudah dipahami seperti asisten manusia. "
@@ -97,15 +100,6 @@ def chat_ai(request):
         resp = requests.post(api_url, headers=headers, data=json.dumps(data), timeout=10)
         result = resp.json()
         ai_reply = result['candidates'][0]['content']['parts'][0]['text']
-
-        # # Dapatkan/make session (misal, dari user id dan session id di request)
-        # session, _ = ChatSession.objects.get_or_create(user=request.user)  # atau pakai session_id dari request
-
-        # # Simpan prompt user
-        # ChatMessage.objects.create(session=session, sender='user', message=user_prompt)
-        # # Simpan response AI
-        # ChatMessage.objects.create(session=session, sender='ai', message=ai_reply)
-
         return Response({"response": ai_reply})
     except Exception as e:
         print("Error:", e)
