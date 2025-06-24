@@ -1,0 +1,10 @@
+Django>=3.2
+djangorestframework
+djangorestframework-simplejwt
+Pillow
+django-cors-headers
+drf-yasg
+langdetect
+requests
+rapidfuzz
+deep-translator
