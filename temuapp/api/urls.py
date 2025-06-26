@@ -13,7 +13,7 @@ from .views.getCurrentUser import get_current_user
 from .views.ai import chat_ai
 from .views.updateSpot import update_tourist_spot
 from .views.deleteSpot import delete_tourist_spot
-from .views.favoriteSpot import add_favorite_spot, remove_favorite_spot, list_favorite_spots
+from .views.favoriteSpot import add_favorite_spot, remove_favorite_spot, list_favorite_spots, most_favorited_spots
 # from .views.ai import get_chat_history
 from django.conf import settings
 from django.conf.urls.static import static
@@ -46,4 +46,5 @@ urlpatterns = [
     path('testimoni/<int:spot_id>/add/', create_testimoni, name='create-testimoni'),
     path('testimoni/spot/<int:spot_id>/', list_testimoni_by_spot, name='list-testimoni-by-spot'),
     path('touristspots/<int:spot_id>/', get_tourist_spot_by_id, name='get-tourist-spot-by-id'),
+    path('most-favorited-spots/', most_favorited_spots),
 ]

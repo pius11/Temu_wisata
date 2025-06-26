@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.db.models import Count
 from temuapp.models import FavoriteSpot, TouristSpot
 from ..serializers.touristSpotsSerializ import TouristSpotSerializer
 
@@ -37,3 +38,18 @@ def list_favorite_spots(request):
     spots = [fav.spot for fav in favorites]
     serializer = TouristSpotSerializer(spots, many=True)
     return Response({"favorites": serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def most_favorited_spots(request):
+    spots = (
+        TouristSpot.objects
+        .filter(favorited_by__isnull=False)
+        .annotate(favorite_count=Count('favorited_by'))
+        .order_by('-favorite_count')
+    )
+    serializer = TouristSpotSerializer(spots, many=True, context={'request': request})
+    data = [
+        {**spot, "favorite_count": spots[i].favorite_count}
+        for i, spot in enumerate(serializer.data)
+    ]
+    return Response({"most_favorited": data})
