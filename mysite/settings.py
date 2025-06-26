@@ -54,12 +54,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # URL frontend Vue saat development
-]
-
+CORS_ALLOW_ALL_ORIGINS = True 
 ROOT_URLCONF = "mysite.urls"
 
 TEMPLATES = [
