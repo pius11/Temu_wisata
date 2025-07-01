@@ -19,9 +19,11 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from temuapp.api.views.search import search_tourist_spot
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('api-auth', include('rest_framework.urls')),
     path('api/', include('temuapp.api.urls')),
+    path('api/search/', search_tourist_spot, name='search_tourist_spot'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
