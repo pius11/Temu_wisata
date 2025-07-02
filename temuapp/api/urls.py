@@ -18,6 +18,7 @@ from .views.favoriteSpot import add_favorite_spot, remove_favorite_spot, list_fa
 from django.conf import settings
 from django.conf.urls.static import static
 from .views.testimoni import create_testimoni, list_testimoni_by_spot
+from .views.getAllSpots import list_iconic_spots
 
 
 
@@ -46,5 +47,6 @@ urlpatterns = [
     path('testimoni/<int:spot_id>/add/', create_testimoni, name='create-testimoni'),
     path('testimoni/spot/<int:spot_id>/', list_testimoni_by_spot, name='list-testimoni-by-spot'),
     path('touristspots/<int:spot_id>/', get_tourist_spot_by_id, name='get-tourist-spot-by-id'),
+    path('touristspots/iconic/', list_iconic_spots, name='iconic-spots'),
     path('most-favorited-spots/', most_favorited_spots),
 ]

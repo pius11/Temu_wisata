@@ -67,7 +67,7 @@ def chat_ai(request):
         "contents": [
             {
                 "parts": [
-                    {"text": prompt}
+                    {"text": prompt} 
                 ]
             }
         ]
