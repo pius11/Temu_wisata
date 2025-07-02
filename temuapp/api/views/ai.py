@@ -55,7 +55,7 @@ def chat_ai(request):
             all_spots = list(spots)
             if all_spots:
                 rekomendasi = random.sample(all_spots, min(3, len(all_spots)))
-                found_spots = [
+                found_spots = [+
                     f"{spot.name} adalah {spot.description}. Lokasinya di {spot.address}. "
                     f"Harga tiket masuk: {spot.price_min} - {spot.price_max}. "
                     f"Fasilitas yang tersedia: {spot.fasilitas}."
@@ -88,7 +88,7 @@ def chat_ai(request):
         "contents": [
             {
                 "parts": [
-                    {"text": prompt}
+                    {"text": prompt} 
                 ]
             }
         ]

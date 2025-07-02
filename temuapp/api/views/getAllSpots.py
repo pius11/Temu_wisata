@@ -27,3 +27,10 @@ def get_tourist_spot_by_id(request, spot_id):
         return Response({"code": 404, "message": "Spot not found"}, status=status.HTTP_404_NOT_FOUND)
     serializer = TouristSpotSerializer(spot)
     return Response({"code": 2000, "message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def list_iconic_spots(request):
+    spots = TouristSpot.objects.filter(is_verified=True ,is_iconic=True, is_removed=False)
+    serializer = TouristSpotSerializer(spots, many=True)
+    return Response({"code": 2000, "message": "Success", "data": serializer.data}, status=status.HTTP_200_OK)

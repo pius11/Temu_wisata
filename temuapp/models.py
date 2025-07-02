@@ -59,7 +59,7 @@ class TouristSpot(models.Model):
     price_min = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     price_max = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     is_verified = models.BooleanField(default=False)
-    is_reported = models.BooleanField(default=False)  # <--- Tambah
+    is_iconic = models.BooleanField(default=False)  # <--- Tambah
     is_removed = models.BooleanField(default=False)   # <--- Tambah
     created_at = models.DateTimeField(auto_now_add=True)
 
