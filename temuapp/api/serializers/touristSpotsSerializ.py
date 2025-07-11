@@ -14,12 +14,22 @@ class SpotImageSerializer(serializers.ModelSerializer):
 class TouristSpotSerializer(serializers.ModelSerializer):
     user_id = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     images = SpotImageSerializer(many=True, read_only=True)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = TouristSpot
-        fields = '__all__'
+        fields = '__all__'  # atau sebutkan field satu per satu, pastikan 'image' masuk
 
-    def to_representation(self, instance):
-        rep = super().to_representation(instance)
-        rep['user_id'] = UserSerializer(instance.user_id).data
-        return rep
+    def get_image(self, obj):
+        primary_img = obj.images.filter(is_primary=True).first()
+        if primary_img and primary_img.file_name:
+            request = self.context.get('request')
+            url = primary_img.file_name.url
+            return request.build_absolute_uri(url) if request else url
+        # fallback: gambar pertama jika tidak ada primary
+        first_img = obj.images.first()
+        if first_img and first_img.file_name:
+            request = self.context.get('request')
+            url = first_img.file_name.url
+            return request.build_absolute_uri(url) if request else url
+        return None

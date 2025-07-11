@@ -1,24 +1,5 @@
 # Python
-**/_pycache_/
-*.pyc
-
-# Virtual Environment
-env/
-venv/
-
-# Django
-db.sqlite3
-
-# VS Code
-.vscode/
-
-# OS Files
-.DS_Store
-Thumbs.db
-
-# .env
-.env# Python
-**/_pycache_/
+**/__pycache__/
 *.pyc
 
 # Virtual Environment
